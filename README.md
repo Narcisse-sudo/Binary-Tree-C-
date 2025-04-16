@@ -1,6 +1,5 @@
 
 # **Projet : Arbre Binaire de Décision avec Bagging en C++**
->>>>>>> ad321c6b164b84bd9cc65a989bcef0c3088699db
 
 Ce projet implémente un arbre de décision en C++ avec la méthode du **bagging** pour la classification. L'arbre de décision construit utilise un algorithme de division basé sur les critères de **Gini** ou de **variance** pour les variables qualitatives et quantitatives. Le projet génère également une visualisation de l'arbre sous forme de fichier `.dot`, que vous pouvez utiliser pour créer une représentation graphique de l'arbre avec Graphviz.
 
