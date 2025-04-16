@@ -33,5 +33,11 @@ public :
         }
         return os;
     }
+    //Destructeur
+    ~DataIndividu() {
+        for (auto attr : vect) {
+            delete attr;
+        }
+    }
 };
 #endif // DATAINDIVIDU_H_INCLUDED
