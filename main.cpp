@@ -1,6 +1,6 @@
 /*
  * Fichier : main.cpp
- * Auteur : Benjamin SWIETEK
+ * Auteur : Benjamin SWIETEK & Narcisse DALKO
  * Date : 2024/2025
  */
 
@@ -13,7 +13,7 @@ int main()
 {
 //Configuration des types de variables correxpondant aux colonnes du fichier
 string QualQuant[10]={"quali","quali","quanti","quanti","quanti","quanti","quanti","quali","quanti","quanti"};
-Data P("D:/OneDrive/Documents/MIGS/Projet_Binary_TreeC++/Pic_Ozone.txt",QualQuant,1);//Colonne 1 = variable cible
+Data P("C:/Users/benji/OneDrive/Bureau/mon_fichier.txt",QualQuant,1);//Colonne 1 = variable cible
 //cout << P;
 cout << endl; 
 
