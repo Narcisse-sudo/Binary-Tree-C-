@@ -1,6 +1,3 @@
-*Projet : Arbre de Décision avec Bagging en C++*
-Ce projet implémente un arbre de décision en C++ avec la méthode du bagging pour la classification. L'arbre de décision construit utilise un algorithme de division basé sur les critères de Gini ou de variance pour les variables qualitatives et quantitatives. Le projet génère également une visualisation de l'arbre sous forme de fichier .dot, que vous pouvez utiliser pour créer une représentation graphique de l'arbre avec Graphviz.
-
 Structure du Code
 Classes Principales
 Arbre
@@ -78,5 +75,4 @@ Fonctionnalités supplémentaires
 Visualisation de l'arbre : Le fichier .dot généré permet de visualiser l'arbre avec Graphviz. Chaque nœud est étiqueté avec la variable utilisée pour la division, les seuils ou groupes, et la prédiction des feuilles.
 
 Ce code peut être utilisé comme base pour des projets de classification supervisée, en particulier pour les ensembles de données contenant à la fois des variables quantitatives et qualitatives. Le bagging peut être appliqué en construisant plusieurs arbres de décision à partir de sous-ensembles aléatoires de données, puis en combinant leurs prédictions pour améliorer la performance et réduire le surapprentissage.
-
 
