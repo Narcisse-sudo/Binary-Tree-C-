@@ -1,0 +1,100 @@
+# depslib dependency file v1.0
+1739574195 source:c:\users\benji\onedrive\bureau\td c++\td7\projet arbrebinairededecision\data.cpp
+	"Data.h"
+	"DataIndividu.h"
+	"Attribut.h"
+	<map>
+	<set>
+	<sstream>
+	<string>
+	<vector>
+	<fstream>
+
+1739573968 c:\users\benji\onedrive\bureau\td c++\td7\projet arbrebinairededecision\data.h
+	<iostream>
+	<map>
+	<string>
+	<vector>
+	"DataIndividu.h"
+
+1739573956 c:\users\benji\onedrive\bureau\td c++\td7\projet arbrebinairededecision\dataindividu.h
+	<iostream>
+	"Attribut.h"
+	<vector>
+
+1739574084 c:\users\benji\onedrive\bureau\td c++\td7\projet arbrebinairededecision\attribut.h
+	<iostream>
+
+1740599112 source:c:\users\benji\onedrive\bureau\td c++\td7\projet arbrebinairededecision\main.cpp
+	"Data.h"
+	"Arbre.h"
+	<iostream>
+
+1740603688 c:\users\benji\onedrive\bureau\td c++\td7\projet arbrebinairededecision\arbre.h
+	<fstream>
+	<vector>
+	<set>
+	"Data.h"
+	<iostream>
+
+1740601148 source:c:\users\benji\onedrive\bureau\td c++\td7\projet arbrebinairededecision\arbre.cpp
+	"Arbre.h"
+	<fstream>
+	<algorithm>
+	<limits>
+	<set>
+	"Data.h"
+	<iostream>
+	<math.h>
+	<vector>
+
+1744669189 source:c:\users\benji\onedrive\bureau\cours master\td c++\td7\projet arbrebinairededecision\main.cpp
+	"Data.h"
+	"Arbre.h"
+	<iostream>
+
+1744669190 c:\users\benji\onedrive\bureau\cours master\td c++\td7\projet arbrebinairededecision\data.h
+	<iostream>
+	<map>
+	<string>
+	<vector>
+	"DataIndividu.h"
+
+1744668904 c:\users\benji\onedrive\bureau\cours master\td c++\td7\projet arbrebinairededecision\dataindividu.h
+	<iostream>
+	"Attribut.h"
+	<vector>
+
+1744668904 c:\users\benji\onedrive\bureau\cours master\td c++\td7\projet arbrebinairededecision\attribut.h
+	<iostream>
+
+1744667289 c:\users\benji\onedrive\bureau\cours master\td c++\td7\projet arbrebinairededecision\arbre.h
+	<fstream>
+	<vector>
+	<set>
+	"Data.h"
+	<iostream>
+
+1744668904 source:c:\users\benji\onedrive\bureau\cours master\td c++\td7\projet arbrebinairededecision\data.cpp
+	"Data.h"
+	"DataIndividu.h"
+	"Attribut.h"
+	<map>
+	<set>
+	<sstream>
+	<string>
+	<vector>
+	<fstream>
+
+1744667232 source:c:\users\benji\onedrive\bureau\cours master\td c++\td7\projet arbrebinairededecision\arbre.cpp
+	"Arbre.h"
+	<fstream>
+	<algorithm>
+	<set>
+	"Data.h"
+	<random>
+	<iostream>
+	<ctime>
+	<math.h>
+	<vector>
+
