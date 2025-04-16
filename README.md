@@ -1,6 +1,4 @@
-<<<<<<< HEAD
-# **Projet : Arbre de Décision avec Bagging en C++**
-=======
+
 # **Projet : Arbre Binaire de Décision avec Bagging en C++**
 >>>>>>> ad321c6b164b84bd9cc65a989bcef0c3088699db
 
