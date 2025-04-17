@@ -3,12 +3,13 @@ using namespace std;
 
 #ifndef DATAINDIVIDU_H_INCLUDED
 #define DATAINDIVIDU_H_INCLUDED
+#include <memory>
 #include"Attribut.h"
 #include<vector>
 
 class DataIndividu{
 
-vector<Attribut*> vect;//Liste des attributs (qualitatifs/quantitatifs)
+vector<unique_ptr<Attribut>> vect;//Liste des attributs (qualitatifs/quantitatifs)
 
 public :
     //Ajouter un attribut a l'individu
@@ -33,11 +34,6 @@ public :
         }
         return os;
     }
-    //Destructeur
-    ~DataIndividu() {
-        for (auto attr : vect) {
-            delete attr;
-        }
-    }
+    
 };
 #endif // DATAINDIVIDU_H_INCLUDED
