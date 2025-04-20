@@ -48,8 +48,8 @@ private :
     bool critereArret(Noeud& P,Data& D);
     float gainGini(vector<int> & classeDroite,vector<int> & classeGauche,Data & D,Noeud & P);
     float Gini(vector<int> & classe,Data & D);
-    float VI(vector<int> & classeMere, Data & D);
-    float gainVI(vector<int> & classeDroite,vector<int> & classeGauche,Data &D,Noeud & P);
+    float Variance(vector<int> & classeMere, Data & D);
+    float gainVariance(vector<int> & classeDroite,vector<int> & classeGauche,Data &D,Noeud & P);
     void creerNoeud(Noeud *& P,Data & D);
     string predireRecursif(Noeud* noeud,DataIndividu& individu);
     void calculerPredictionsFeuilles(Noeud* noeud, Data& D);
