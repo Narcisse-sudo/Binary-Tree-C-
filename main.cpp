@@ -1,52 +1,39 @@
 #include"Data.h"
 #include"Arbre.h"
-#include <iostream>
-using namespace std;
 
-int main()
-{
-//Configuration des types de variables correxpondant aux colonnes du fichier
-//string QualQuant[10]={"quali","quali","quanti","quanti","quanti","quanti","quanti","quali","quanti","quanti"};
-Data data("D:/OneDrive/Documents/MIGS/Projet_Binary_TreeC++/Pic_Ozone.txt", 1);//Colonne 1 = variable cible
-//cout << data;
-//data.getTypeVar();
+int main(){
+    
+    //Configuration des types de variables correxpondant aux colonnes du fichier
+    string QualQuant[10]={"quanti","quali","quanti","quanti","quanti","quanti","quanti","quali","quanti","quanti"};
 
-// Diviser les donnees en train et  test
-auto [train_set, test_set] = data.Train_Test_Split(0.8);
-//cout << train_set; 
+    Data data("D:/OneDrive/Documents/MIGS/Projet_Binary_TreeC++/Pic_Ozone.txt", QualQuant, 1);//Colonne 1 = variable cible
+
+    //cout << data;
+    //data.getTypeVar();
 
 
-cout << endl;
+    // Diviser les donnees en train et  test
+    auto [train_set, test_set] = data.Train_Test_Split(0.8);
+    //cout << train_set; 
 
-    //Preparation des indices des individus
+    cout << endl;
+
+    //Preparation des indices des individus du train_set
     vector<int> indice;
     for(int i=0; i<train_set.V.size(); i++){
         indice.push_back(i);
     }
 
-
     //Construction de l'arbre de decision
     Arbre A;
-    A.creer_Arbre(train_set,indice,"PremierArbre");
+    A.creer_Arbre(train_set, indice, "PremierArbre");
 
-    cout << "=== Prédictions sur le test set ===" << endl;
-
-int correct = 0;
-for (int i = 0; i < test_set.V.size(); i++) {
-    DataIndividu indiv = test_set.V[i];
-    // Prédiction
-    string prediction = A.predire(indiv);
-    // Vérité terrain (valeur réelle de la variable cible Y)
-    float vrai_label = indiv.getAtQuant(data.indVarY); // à adapter si c'est une variable quantitative
-    
-    cout << "Individu " << i+1 << " : Predit = " << prediction << ", Reel = " << vrai_label << endl;
-    if (stof(prediction) == vrai_label) correct++;
-}
-
-float accuracy = (float)correct / test_set.V.size();
-cout << "\nAccuracy sur le test set : " << accuracy * 100 << " %" << endl;
+    // Prediction sur le test_set et calcule du score 
+    auto [prediction, score] = A.evaluerTestSet(test_set);
+    for (const auto& pred : prediction) cout << pred <<" ";
+    cout <<"\n \n" <<  " score : " << score << endl; 
 
     // Executer le bagging
-   // BaggingArbre bagging(5); // 5 arbres
-    //bagging.executerBagging(P,P.V[0]);
+     BaggingArbre bagging(5); // 5 arbres
+     bagging.executerBagging(data, data.V[3]);
 }

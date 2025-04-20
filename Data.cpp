@@ -1,20 +1,17 @@
 #include"Data.h"
 #include"DataIndividu.h"
 #include"Attribut.h"
-#include<map>
 #include<set>
 #include <sstream>
-#include<string>
-#include<vector>
 #include<fstream>
 #include <algorithm>
 
 
-Data::Data(string texte, int indiceVarY){
+Data::Data(string texte,string TVar[], int indiceVarY){
     indVarY = indiceVarY;
     //Ouverture du fichier
     ifstream in(texte);
-    if (!in) cout << "pb ouverture fichier" << endl;
+    if (!in && texte!="") cout << "pb ouverture fichier" << endl;
 
     //Lecture des noms de variables (premiere ligne)
     string premiereLigne;
@@ -32,39 +29,28 @@ Data::Data(string texte, int indiceVarY){
 
     nbrVar = NomVar.size();
 
-    // Lecture de la deuxième ligne pour recuperer le type des variables
-    string Ligne_2;
-    if (getline(in, Ligne_2)){
-        stringstream ligne(Ligne_2);
-        string value_Var;
-        while(getline(ligne, value_Var, ',')){
-            try{
-                stof(value_Var);
-                TypeVar.push_back("quanti");
+ //Initialisation des types de variables
+ for(int i=0; i<nbrVar; i++){
+    TypeVar.push_back(TVar[i]);
+}
+
+//Lecture des donnees individuelles
+string ligne;
+while (getline(in, ligne)){
+    stringstream donnees(ligne);
+    string cellule;
+    DataIndividu I;
+    for (int i = 0; i < nbrVar && getline(donnees,cellule, ','); ++i){
+            if(TVar[i]=="quanti"){
+                float y = stof(cellule);
+                I.ajouteAt(new AtQuant(y));
             }
-            catch(...){ TypeVar.push_back("quali"); }
-        }
+            else{
+                I.ajouteAt(new AtQual(cellule));
+            }
     }
-
-
-    //Lecture des donnees individuelles
-    string ligne;
-    while (getline(in, ligne)){
-        stringstream donnees(ligne);
-        string cellule;
-        DataIndividu I;
-        for (int i = 0; i < nbrVar && getline(donnees,cellule, ','); ++i){
-                if(TypeVar[i]=="quanti"){
-                    float y = stof(cellule);
-                    I.ajouteAt(new AtQuant(y));
-                }
-                else{
-                    I.ajouteAt(new AtQual(cellule));
-                }
-        }
-        V.push_back(I);
-      
-    }
+    V.push_back(I);
+}
 
     //Construction des categories uniques pour les variables qualitatives
     for (int i=0;i < nbrVar;++i) {
@@ -112,7 +98,7 @@ ostream & operator<<(ostream & os,Data D)
 //------------------------------------------------------------------------------------------------------------------
 
 // Définir la méthode pour diviser les données
-pair<Data, Data> Data::Train_Test_Split(float pourcentageTrain) const {
+pair<Data, Data> Data::Train_Test_Split(float pourcentageTrain)  {
     int n = V.size();
     int n_train = n * pourcentageTrain;
 
@@ -123,8 +109,8 @@ pair<Data, Data> Data::Train_Test_Split(float pourcentageTrain) const {
     vector<DataIndividu> train_V(shuffled.begin(), shuffled.begin() + n_train);
     vector<DataIndividu> test_V(shuffled.begin() + n_train, shuffled.end());
 
-    Data trainData("", indVarY);
-    Data testData("", indVarY);
+    Data trainData("", TypeVar.data(), indVarY);
+    Data testData("", TypeVar.data(), indVarY);
 
     trainData.V = train_V;
     testData.V = test_V;

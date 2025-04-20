@@ -1,14 +1,7 @@
-#include"Arbre.h"
-#include <fstream>
+#include "Arbre.h"
 #include <algorithm>
-#include<set>
-#include"Data.h"
 #include <random>
-#include <iostream>
-#include <ctime>
-#include<math.h>
-#include<vector>
-using namespace std;
+#include <math.h>
 
 //--------------------------------------------------------------------------------------------------------------------
 
@@ -259,7 +252,7 @@ float Arbre::gainGini(vector<int> & classeDroite, vector<int> & classeGauche, Da
  * \return void
  */
 void Arbre::creer_Arbre(Data & D,vector<int> indice,string nomFichier){
-    
+  
     racine = new NoeudFeuille(indice);
     creerNoeud(racine,D);
     calculerPredictionsFeuilles(racine,D);
@@ -389,7 +382,8 @@ void Arbre::calculerPredictionsFeuilles(Noeud* noeud, Data& D) {
                 }
             }
             feuille->prediction = classeMajoritaire;
-        } else  {
+        } 
+        else {
             // Calcul de la moyenne
             float somme = 0;
             for (int ind : feuille->vectIndiceInd) {
@@ -411,11 +405,11 @@ void Arbre::calculerPredictionsFeuilles(Noeud* noeud, Data& D) {
  * \param individu DataIndividu&
  * \return string
  */
-string Arbre::predire(DataIndividu& individu){
+string Arbre::predire( DataIndividu& individu){
     if (racine == nullptr) {
         throw runtime_error("L'arbre n'a pas été construit.");
     }
-    return predireRecursif(racine,individu);
+    return predireRecursif(racine, individu);
 }
 
 //--------------------------------------------------------------------------------------------------------------------
@@ -425,7 +419,7 @@ string Arbre::predire(DataIndividu& individu){
  * \param noeud Noeud*,individu DataIndividu&
  * \return string
  */
-string Arbre::predireRecursif(Noeud* noeud,DataIndividu& individu){
+string Arbre::predireRecursif(Noeud* noeud,  DataIndividu& individu){
     //Noeud Feuille
     if (noeud->typeVarOpti == -1) {
         NoeudFeuille* feuille = static_cast<NoeudFeuille*>(noeud);
@@ -439,7 +433,7 @@ string Arbre::predireRecursif(Noeud* noeud,DataIndividu& individu){
             return predireRecursif(noeud->Ndroite,individu);
         }
     //Noeud Qualitative
-    } else if (noeud->typeVarOpti == 1){
+    } else  {
         string valeur = individu.getAtQual(noeud->indVarOpti);
         if (static_cast<NoeudQualitatif*>(noeud)->meilleurGroupe.find(valeur) != static_cast<NoeudQualitatif*>(noeud)->meilleurGroupe.end()) {
             return predireRecursif(noeud->Ngauche,individu);
@@ -485,7 +479,7 @@ vector<int> BaggingArbre::genererEchantillon(Data& D){
  * \return void
  */
 void BaggingArbre::entrainer(Data& D){
-    // Creer et entrainer nbrArbres arbres
+    // Creer et entrainer nombreux  arbres
     for (int i = 0; i < nbrArbres; ++i){
         Arbre* arbre = new Arbre();
         vector<int> echantillon = genererEchantillon(D);
@@ -522,7 +516,7 @@ string BaggingArbre::predire(Data& D,DataIndividu& individu){
             }
         }
         return predictionMajoritaire;
-    } else if (D.TypeVar[D.indVarY]=="quanti"){
+    } else {
         // Moyenne des predictions
         float somme = 0;
         for (Arbre* arbre : arbres){
@@ -545,4 +539,63 @@ void BaggingArbre::executerBagging(Data& D, DataIndividu& individuTest){
     entrainer(D);
     string prediction = predire(D,individuTest);
     cout << "Prediction pour l'individu de test : " << prediction << endl;
+}
+
+
+
+#include <cmath>   // Pour pow
+#include <numeric> // Pour accumulate
+
+// Évalue le modèle sur un test_set, renvoie un vecteur de prédictions et la performance (accuracy ou R²)
+pair<vector<string>, float> Arbre::evaluerTestSet(Data& test_set) {
+    vector<string> predictions; // Stocke les prédictions
+    int indexY = test_set.indVarY; // L’indice de la variable cible
+    string typeY = test_set.TypeVar[indexY]; // Type de la variable cible : "quali" ou "quanti"
+
+    float performance = 0.0;
+
+    // Variables pour R² score
+    vector<float> y_true; // Valeurs réelles
+    vector<float> y_pred; // Valeurs prédites
+    float somme = 0.0;
+
+    for (DataIndividu& individu : test_set.V) {
+        // Prédiction avec l’arbre de décision
+        string prediction = this->predire(individu);
+        predictions.push_back(prediction);
+
+        if (typeY == "quali") {
+            // Accuracy : compare la prédiction avec la vraie valeur
+            string true_val = individu.getAtQual(indexY);
+            if (prediction == true_val) {
+                performance += 1.0;
+            }
+        } else if (typeY == "quanti") {
+            // R² score : nécessite des valeurs numériques
+            float y = individu.getAtQuant(indexY);
+            float y_hat = stof(prediction); // Convertit la prédiction en float
+
+            y_true.push_back(y);
+            y_pred.push_back(y_hat);
+            somme += y;
+        }
+    }
+
+    if (typeY == "quali") {
+        // Accuracy = nombre de prédictions correctes / total
+        performance /= test_set.V.size();
+    } else if (typeY == "quanti") {
+        float y_bar = somme / y_true.size(); // Moyenne de y
+        float ss_tot = 0.0;
+        float ss_res = 0.0;
+
+        for (size_t i = 0; i < y_true.size(); ++i) {
+            ss_tot += pow(y_true[i] - y_bar, 2);
+            ss_res += pow(y_true[i] - y_pred[i], 2);
+        }
+
+        performance = 1 - (ss_res / ss_tot); // R²
+    }
+
+    return {predictions, performance};
 }

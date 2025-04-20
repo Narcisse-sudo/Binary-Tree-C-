@@ -1,34 +1,38 @@
-
-#include <iostream>
-using namespace std;
-#include <cstdlib>
-#include <ctime>
 #ifndef DATA_H_INCLUDED
 #define DATA_H_INCLUDED
-#include<map>
-#include<string>
-#include<vector>
-#include"DataIndividu.h"
+
+#include <iostream>
+#include <cstdlib>
+#include <ctime>
+#include <map>
+#include <string>
+#include <vector>
 #include <utility>
+#include "DataIndividu.h"
 
-class Data{
-public :
-    map<string, vector<string>> cat;//Modalites uniques
+using namespace std;
 
-    int nbrVar;//nombre total de variable
-    int indVarY;//l'indice de la colonne de la variable Y
+class Data {
+public:
+    map<string, vector<string>> cat; // Modalités uniques pour les variables qualitatives
+    int nbrVar;                      // Nombre total de variables
+    int indVarY;                     // Indice de la colonne de la variable cible Y
 
-    vector<string> TypeVar;//vecteur contenant le type de variable (qualitative/quantitative) de chaques variables.
-    vector<string> NomVar;//vecteur contenant le nom de chaque variable
-    vector<DataIndividu> V;//vecteur contenant les valeurs de chaques individus
+    vector<string> TypeVar;         // Type de chaque variable : "qualitative" ou "quantitative"
+    vector<string> NomVar;          // Nom de chaque variable
+    vector<DataIndividu> V;         // Ensemble des individus (données)
 
-    Data(string texte, int indiceVarY);//Charge les donnees depuis un fichier CSV
+    // Constructeur : charge les données à partir d'un fichier texte (CSV-like)
+    Data(string texte, string TVar[], int indiceVarY);
 
-    friend ostream & operator<<(ostream & os,Data D);//Affiche les donnees
+    // Surcharge de l'opérateur << pour afficher l'objet Data
+    friend ostream& operator<<(ostream& os, Data D);
 
-    void getTypeVar() ;
-     
-    // Renvoie une paire de Data (train, test)
-    pair<Data, Data> Train_Test_Split(float pourcentageTrain = 0.8) const;
+    // Détecte automatiquement le type des variables (quantitative/qualitative)
+    void getTypeVar();
+
+    // Sépare les données en un ensemble d'entraînement et un ensemble de test
+    pair<Data, Data> Train_Test_Split(float pourcentageTrain = 0.8) ;
 };
+
 #endif // DATA_H_INCLUDED
