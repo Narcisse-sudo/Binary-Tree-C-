@@ -5,7 +5,7 @@
 
 class DataIndividu{
 
-vector<Attribut*> vect; //vecteur des attributs (qualitatifs/quantitatifs)
+vector<Attribut*> vect; // des attributs (qualitatifs/quantitatifs)
 
 public :
     //Ajouter un attribut a l'individu
