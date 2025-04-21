@@ -28,12 +28,12 @@ int main()
     Arbre A;
     A.creer_Arbre(train_set, indice, "PremierArbre");
 
-    // Prediction sur le test_set et calcule du score 
+    // Prediction sur le test_set et calcule du score de prediction
     auto [prediction, score] = A.evaluerTestSet(test_set);
     for (const auto& pred : prediction) cout << pred <<" ";
     cout <<"\n \n" <<  " score : " << score << "\n\n"; 
 
-    // Executer le bagging
+    // Executer le bagging pour un seule individu
      BaggingArbre bagging(5); // 5 arbres
      bagging.executerBagging(data, data.V[3]);
 }

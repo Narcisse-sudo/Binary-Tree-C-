@@ -74,10 +74,10 @@ private :
     void exporterGraphviz(Noeud * N,Data &D,string nomFichier);
     void exporterGraphvizRecursif(Noeud* noeud, ofstream& fichier, int& id,Data & D);
 public  :
-    ~Arbre(); // Declaration du destructeur
-    string predire(DataIndividu& individu);//Predir  un individu
-    Arbre() : racine(nullptr) {}//Constructeur
-    void creer_Arbre(Data & D, vector<int> indice, string nomFichier);//Construit l'arbre
+    ~Arbre(); 
+    string predire(DataIndividu& individu);                             //Predir  un individu
+    Arbre() : racine(nullptr) {}                                         //Constructeur
+    void creer_Arbre(Data & D, vector<int> indice, string nomFichier);   //Construit l'arbre
     pair<vector<string>, float>  evaluerTestSet(Data& test_set);
 };
 

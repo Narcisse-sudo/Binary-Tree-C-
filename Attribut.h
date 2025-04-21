@@ -21,38 +21,20 @@ public :
     }
 
     //Implementation des methodes virtuelles
-    string getAtQual(){
-        return rep;
-    }
-
-    float getAtQuant(){
-        return 0;
-    }
-
-    void affiche(ostream &os){
-        os << rep ;
-    }
+    string getAtQual(){ return rep; }
+    float getAtQuant(){ return 0; }
+    void affiche(ostream &os){ os << rep ; }
 };
 
 class AtQuant : public Attribut{
     float rep;//Valeur quantitative stockee
 public :
     //Constructeur
-    AtQuant(double r){
-        rep=r;
-    }
+    AtQuant(double r){ rep=r; }
 
     //Implementation des methodes virtuelles
-    float getAtQuant(){
-        return rep;
-    }
-
-    string getAtQual(){
-        return "";
-    }
-
-    void affiche(ostream &os){
-        os << rep;
-    }
+    float getAtQuant(){ return rep; }
+    string getAtQual(){ return ""; }
+    void affiche(ostream &os){ os << rep; }
 };
 #endif // ATTRIBUT_H_INCLUDED

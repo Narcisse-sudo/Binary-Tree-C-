@@ -5,7 +5,7 @@
 
 class DataIndividu{
 
-vector<Attribut*> vect; //Liste des attributs (qualitatifs/quantitatifs)
+vector<Attribut*> vect; //vecteur des attributs (qualitatifs/quantitatifs)
 
 public :
     //Ajouter un attribut a l'individu
@@ -26,15 +26,6 @@ public :
         }
         return os;
     }
-
-    /* // Libère la mémoire allouée pour chaque attribut
-    ~DataIndividu() {
-        for (auto a : vect) {
-            delete a;
-        }
-    }*/
-
-    
 
 };
 #endif // DATAINDIVIDU_H_INCLUDED

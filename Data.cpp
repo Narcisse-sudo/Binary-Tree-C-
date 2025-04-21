@@ -30,7 +30,7 @@ Data::Data(string texte,string TVar[], int indiceVarY){
 
     nbrVar = NomVar.size();
 
- //Initialisation des types de variables
+ //Recuperation du type des variables
  for(int i=0; i<nbrVar; i++){
     TypeVar.push_back(TVar[i]);
 }

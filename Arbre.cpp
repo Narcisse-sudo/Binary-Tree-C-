@@ -541,8 +541,14 @@ void BaggingArbre::executerBagging(Data& D, DataIndividu& individuTest){
     cout << "Prediction pour l'individu de test : " << prediction << endl;
 }
 
+//--------------------------------------------------------------------------------------------------------------------
 
-// Évalue le modèle sur un test_set, renvoie un vecteur de prédictions et la performance (accuracy ou R²)
+/**
+ * \brief Évalue le modèle sur un test_set, renvoie un vecteur de prédictions et la performance (accuracy ou R²)
+ * \param D test_set&
+ * \return pair
+ */
+ 
 pair<vector<string>, float> Arbre::evaluerTestSet(Data& test_set) {
     vector<string> predictions; // Stocke les prédictions
     int indexY = test_set.indVarY; // L’indice de la variable cible
@@ -567,7 +573,7 @@ pair<vector<string>, float> Arbre::evaluerTestSet(Data& test_set) {
                 performance += 1.0;
             }
         } else if (typeY == "quanti") {
-            // R² score : nécessite des valeurs numériques
+            //  calcule R² score 
             float y = individu.getAtQuant(indexY);
             float y_hat = stof(prediction); // Convertit la prédiction en float
 
