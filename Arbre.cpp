@@ -1,14 +1,7 @@
-#include"Arbre.h"
-#include <fstream>
+#include "Arbre.h"
 #include <algorithm>
-#include<set>
-#include"Data.h"
 #include <random>
-#include <iostream>
-#include <ctime>
-#include<math.h>
-#include<vector>
-using namespace std;
+#include <math.h>
 
 //--------------------------------------------------------------------------------------------------------------------
 
@@ -58,7 +51,7 @@ void Arbre::creerNoeud(Noeud*& P,Data & D)
                 //Calculer le gain de Gini ou de variance pour cette division
                 float gain=1; //Valeur initiale qui sera ecrasee
                 if(D.TypeVar[D.indVarY]=="quali"){gain = gainGini(classeDroite,classeGauche,D,*P);}// Gain pour variable cible qualitative
-                else if(D.TypeVar[D.indVarY]=="quanti"){gain = gainVI(classeDroite,classeGauche,D,*P);}// Gain pour variable cible quantitative
+                else  {gain = gainVariance(classeDroite,classeGauche,D,*P);}// Gain pour variable cible quantitative
 
                 // Mettre à jour si ce gain est meilleur
                 if (gain < meilleurGainGiniVI){
@@ -95,7 +88,7 @@ void Arbre::creerNoeud(Noeud*& P,Data & D)
                     // Calculer le gain de Gini ou de variance pour cette division
                     float gain=1;
                     if(D.TypeVar[D.indVarY]=="quali"){gain = gainGini(classeDroite,classeGauche,D,*P);}
-                    else if(D.TypeVar[D.indVarY]=="quanti"){ gain = gainVI(classeDroite,classeGauche,D,*P);}
+                    else if(D.TypeVar[D.indVarY]=="quanti"){ gain = gainVariance(classeDroite,classeGauche,D,*P);}
                     // Mettre à jour si ce gain est meilleur
                     if (gain < meilleurGainGiniVI){
                         meilleurGainGiniVI = gain;
@@ -131,7 +124,7 @@ void Arbre::creerNoeud(Noeud*& P,Data & D)
     creerNoeud(P->Ndroite, D);
 }
 
-
+//--------------------------------------------------------------------------------------------------------------------
 
 /**
  * \brief
@@ -144,18 +137,18 @@ void Arbre::creerNoeud(Noeud*& P,Data & D)
  * \param classeDroite vector<int>&
  * \return void
  */
-void Arbre::diviserNoeud(Noeud& P,Data& D,int meilleureVar,float meilleurSeuil,set<string>& meilleurGroupe,vector<int>& classeGauche,vector<int>& classeDroite){
-    if(D.TypeVar[meilleureVar] == "quanti"){
+void Arbre::diviserNoeud(Noeud& P,Data& D,int IndiceMeilleureVar,float meilleurSeuil,set<string>& meilleurGroupe,vector<int>& classeGauche,vector<int>& classeDroite){
+    if(D.TypeVar[IndiceMeilleureVar] == "quanti"){
         for (int ind : P.vectIndiceInd){
-            if (D.V[ind].getAtQuant(meilleureVar) <= meilleurSeuil){
+            if (D.V[ind].getAtQuant(IndiceMeilleureVar) <= meilleurSeuil){
                 classeGauche.push_back(ind);
             }
             else{classeDroite.push_back(ind);}
         }
     }
-    else if(D.TypeVar[meilleureVar] == "quali"){
+    else if(D.TypeVar[IndiceMeilleureVar] == "quali"){
         for (int ind : P.vectIndiceInd){
-            if (meilleurGroupe.find(D.V[ind].getAtQual(meilleureVar)) != meilleurGroupe.end()){
+            if (meilleurGroupe.find(D.V[ind].getAtQual(IndiceMeilleureVar)) != meilleurGroupe.end()){
                 classeGauche.push_back(ind);
             }
             else{classeDroite.push_back(ind);}
@@ -163,8 +156,7 @@ void Arbre::diviserNoeud(Noeud& P,Data& D,int meilleureVar,float meilleurSeuil,s
     }
 }
 
-
-
+//--------------------------------------------------------------------------------------------------------------------
 
 /**
  * \brief
@@ -174,18 +166,18 @@ void Arbre::diviserNoeud(Noeud& P,Data& D,int meilleureVar,float meilleurSeuil,s
 bool Arbre::critereArret(Noeud& P,Data& D) {
     if (P.vectIndiceInd.size() < 10) return true;
     if (D.TypeVar[D.indVarY] == "quali" && Gini(P.vectIndiceInd, D) == 0) return true;
-    if (D.TypeVar[D.indVarY] == "quanti" && VI(P.vectIndiceInd, D) == 0) return true;
+    if (D.TypeVar[D.indVarY] == "quanti" && Variance(P.vectIndiceInd, D) == 0) return true;
     return false;
 }
 
-
+//--------------------------------------------------------------------------------------------------------------------
 
 /**
  * \brief calcule la variance de la variable cible pour les individus contenus dans le vecteur classeMere.
  * \param classeMere vector<int>&, D Data&
  * \return float
  */
-float Arbre::VI(vector<int> & classeMere, Data & D){
+float Arbre::Variance(vector<int> & classeMere, Data & D){
     float res=0;
     float moy=0;
     for (int ind : classeMere){
@@ -198,8 +190,7 @@ float Arbre::VI(vector<int> & classeMere, Data & D){
     return res/classeMere.size();
 }
 
-
-
+//--------------------------------------------------------------------------------------------------------------------
 
 /**
  * \brief Cette methode calcule le gain de variance
@@ -208,14 +199,13 @@ float Arbre::VI(vector<int> & classeMere, Data & D){
  * \param D Data&, P Noeud&
  * \return float
  */
-float Arbre::gainVI(vector<int> & classeDroite,vector<int> & classeGauche,Data &D,Noeud & P){
-    float VIG = VI(classeGauche,D);
-    float VID = VI(classeDroite,D);
+float Arbre::gainVariance(vector<int> & classeDroite,vector<int> & classeGauche,Data &D,Noeud & P){
+    float VIG = Variance(classeGauche,D);
+    float VID = Variance(classeDroite,D);
     return (float) classeDroite.size()*VID/P.vectIndiceInd.size() + classeGauche.size()*VIG/P.vectIndiceInd.size();
 }
 
-
-
+//--------------------------------------------------------------------------------------------------------------------
 
 /**
  * \brief Calcule l'indice de Gini
@@ -236,7 +226,7 @@ float Arbre::Gini(vector<int> & classeMere, Data & D){
     return gini;
 }
 
-
+//--------------------------------------------------------------------------------------------------------------------
 
 /**
  * \brief calcule le gain d'impurete de Gini
@@ -245,14 +235,13 @@ float Arbre::Gini(vector<int> & classeMere, Data & D){
  * \param D Data&, P Noeud&
  * \return float
  */
-float Arbre::gainGini(vector<int> & classeDroite,vector<int> & classeGauche,Data &D,Noeud & P){
+float Arbre::gainGini(vector<int> & classeDroite, vector<int> & classeGauche, Data &D,Noeud & P){
     float giniG = Gini(classeGauche,D);
     float giniD = Gini(classeDroite,D);
     return (float) (classeDroite.size()*giniD + classeGauche.size()*giniG)/P.vectIndiceInd.size();
 }
 
-
-
+//--------------------------------------------------------------------------------------------------------------------
 
 /**
  * \brief Initialise un arbre de decision en creant un noud racine contenant
@@ -263,14 +252,16 @@ float Arbre::gainGini(vector<int> & classeDroite,vector<int> & classeGauche,Data
  * \return void
  */
 void Arbre::creer_Arbre(Data & D,vector<int> indice,string nomFichier){
+
     racine = new NoeudFeuille(indice);
     creerNoeud(racine,D);
     calculerPredictionsFeuilles(racine,D);
     exporterGraphviz(racine,D,nomFichier);
+
+
 }
 
-
-
+//--------------------------------------------------------------------------------------------------------------------
 
 /**
  * \brief genere un fichier .dot permettant de visualiser l'arbre de decision.
@@ -278,7 +269,7 @@ void Arbre::creer_Arbre(Data & D,vector<int> indice,string nomFichier){
  * \param nomFichier string
  * \return void
  */
-void Arbre::exporterGraphviz( Noeud* N, Data& D,string nomFichier){
+void Arbre::exporterGraphviz( Noeud* N, Data& D, string nomFichier){
     ofstream fichier(nomFichier+".dot");
     if (!fichier) {
         cerr << "Erreur : impossible d'ouvrir le fichier " << "Graphe.dot" << endl;
@@ -296,8 +287,7 @@ void Arbre::exporterGraphviz( Noeud* N, Data& D,string nomFichier){
     cout << " Fichier GRAPHVIZ genere : " << nomFichier+".dot" << endl;
 }
 
-
-
+//--------------------------------------------------------------------------------------------------------------------
 
  /**
   *\brief Cette methode est appelee recursivement pour parcourir l'arbre de decision et ecrire
@@ -309,7 +299,6 @@ void Arbre::exporterGraphviz( Noeud* N, Data& D,string nomFichier){
  void Arbre::exporterGraphvizRecursif(Noeud* noeud, ofstream& fichier, int& id, Data& D) {
     if (!noeud) return;
     int noeudId = id++; // Identifiant unique pour ce noeud
-
     // ecrire le noeud actuel avec les informations appropriees
     fichier << "  " << noeudId << " [label=\"";
 
@@ -364,8 +353,7 @@ void Arbre::exporterGraphviz( Noeud* N, Data& D,string nomFichier){
     }
 }
 
-
-
+//--------------------------------------------------------------------------------------------------------------------
 
 /**
  * \brief Calcule les predictions pour tous les noeuds feuilles de l'arbre
@@ -394,7 +382,8 @@ void Arbre::calculerPredictionsFeuilles(Noeud* noeud, Data& D) {
                 }
             }
             feuille->prediction = classeMajoritaire;
-        } else if (D.TypeVar[D.indVarY]=="quanti") {
+        }
+        else {
             // Calcul de la moyenne
             float somme = 0;
             for (int ind : feuille->vectIndiceInd) {
@@ -409,29 +398,28 @@ void Arbre::calculerPredictionsFeuilles(Noeud* noeud, Data& D) {
     }
 }
 
-
-
+//--------------------------------------------------------------------------------------------------------------------
 
 /**
  * \brief Predit la classe d'un individu en parcourant l'arbre
  * \param individu DataIndividu&
  * \return string
  */
-string Arbre::predire(DataIndividu& individu){
+string Arbre::predire( DataIndividu& individu){
     if (racine == nullptr) {
         throw runtime_error("L'arbre n'a pas été construit.");
     }
-    return predireRecursif(racine,individu);
+    return predireRecursif(racine, individu);
 }
 
-
+//--------------------------------------------------------------------------------------------------------------------
 
 /**
  * \brief Predit la classe d'un individu en parcourant de manière recursive l'arbre
  * \param noeud Noeud*,individu DataIndividu&
  * \return string
  */
-string Arbre::predireRecursif(Noeud* noeud,DataIndividu& individu){
+string Arbre::predireRecursif(Noeud* noeud,  DataIndividu& individu){
     //Noeud Feuille
     if (noeud->typeVarOpti == -1) {
         NoeudFeuille* feuille = static_cast<NoeudFeuille*>(noeud);
@@ -445,7 +433,7 @@ string Arbre::predireRecursif(Noeud* noeud,DataIndividu& individu){
             return predireRecursif(noeud->Ndroite,individu);
         }
     //Noeud Qualitative
-    } else if (noeud->typeVarOpti == 1){
+    } else  {
         string valeur = individu.getAtQual(noeud->indVarOpti);
         if (static_cast<NoeudQualitatif*>(noeud)->meilleurGroupe.find(valeur) != static_cast<NoeudQualitatif*>(noeud)->meilleurGroupe.end()) {
             return predireRecursif(noeud->Ngauche,individu);
@@ -455,8 +443,7 @@ string Arbre::predireRecursif(Noeud* noeud,DataIndividu& individu){
     }
 }
 
-
-
+//--------------------------------------------------------------------------------------------------------------------
 
 /** \brief Destructeur de la classe BaggingArbre
  */
@@ -466,7 +453,7 @@ BaggingArbre::~BaggingArbre(){
     }
 }
 
-
+//--------------------------------------------------------------------------------------------------------------------
 
 /**
  * \brief Genere un echantillon d'indices avec remise de la taille de la base de donnees D
@@ -484,8 +471,7 @@ vector<int> BaggingArbre::genererEchantillon(Data& D){
     return echantillon;
 }
 
-
-
+//--------------------------------------------------------------------------------------------------------------------
 
 /**
  * \brief Entraine une foret d'arbres par bagging
@@ -493,7 +479,7 @@ vector<int> BaggingArbre::genererEchantillon(Data& D){
  * \return void
  */
 void BaggingArbre::entrainer(Data& D){
-    // Creer et entrainer nbrArbres arbres
+    // Creer et entrainer nombreux  arbres
     for (int i = 0; i < nbrArbres; ++i){
         Arbre* arbre = new Arbre();
         vector<int> echantillon = genererEchantillon(D);
@@ -502,8 +488,7 @@ void BaggingArbre::entrainer(Data& D){
     }
 }
 
-
-
+//--------------------------------------------------------------------------------------------------------------------
 
 /**
  * \brief Predit la classe/valeur d'un individu par vote majoritaire/moyenne.
@@ -531,7 +516,7 @@ string BaggingArbre::predire(Data& D,DataIndividu& individu){
             }
         }
         return predictionMajoritaire;
-    } else if (D.TypeVar[D.indVarY]=="quanti"){
+    } else {
         // Moyenne des predictions
         float somme = 0;
         for (Arbre* arbre : arbres){
@@ -542,7 +527,7 @@ string BaggingArbre::predire(Data& D,DataIndividu& individu){
     }
 }
 
-
+//--------------------------------------------------------------------------------------------------------------------
 
 /**
  * \brief Execute le processus complet de bagging (entrainement + prediction)
@@ -554,4 +539,59 @@ void BaggingArbre::executerBagging(Data& D, DataIndividu& individuTest){
     entrainer(D);
     string prediction = predire(D,individuTest);
     cout << "Prediction pour l'individu de test : " << prediction << endl;
+}
+
+
+// Évalue le modèle sur un test_set, renvoie un vecteur de prédictions et la performance (accuracy ou R²)
+pair<vector<string>, float> Arbre::evaluerTestSet(Data& test_set) {
+    vector<string> predictions; // Stocke les prédictions
+    int indexY = test_set.indVarY; // L’indice de la variable cible
+    string typeY = test_set.TypeVar[indexY]; // Type de la variable cible : "quali" ou "quanti"
+
+    float performance = 0.0;
+
+    // Variables pour R² score
+    vector<float> y_true; // Valeurs réelles
+    vector<float> y_pred; // Valeurs prédites
+    float somme = 0.0;
+
+    for (DataIndividu& individu : test_set.V) {
+        // Prédiction avec l’arbre de décision
+        string prediction = this->predire(individu);
+        predictions.push_back(prediction);
+
+        if (typeY == "quali") {
+            // Accuracy : compare la prédiction avec la vraie valeur
+            string true_val = individu.getAtQual(indexY);
+            if (prediction == true_val) {
+                performance += 1.0;
+            }
+        } else if (typeY == "quanti") {
+            // R² score : nécessite des valeurs numériques
+            float y = individu.getAtQuant(indexY);
+            float y_hat = stof(prediction); // Convertit la prédiction en float
+
+            y_true.push_back(y);
+            y_pred.push_back(y_hat);
+            somme += y;
+        }
+    }
+
+    if (typeY == "quali") {
+        // Accuracy = nombre de prédictions correctes / total
+        performance /= test_set.V.size();
+    } else if (typeY == "quanti") {
+        float y_bar = somme / y_true.size(); // Moyenne de y
+        float ss_tot = 0.0;
+        float ss_res = 0.0;
+
+        for (size_t i = 0; i < y_true.size(); ++i) {
+            ss_tot += pow(y_true[i] - y_bar, 2);
+            ss_res += pow(y_true[i] - y_pred[i], 2);
+        }
+
+        performance = 1 - (ss_res / ss_tot); // R²
+    }
+
+    return {predictions, performance};
 }

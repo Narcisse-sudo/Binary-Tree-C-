@@ -1,19 +1,18 @@
 #include"Data.h"
 #include"DataIndividu.h"
 #include"Attribut.h"
-#include<map>
 #include<set>
 #include <sstream>
-#include<string>
-#include<vector>
 #include<fstream>
+#include <algorithm>
 
+//-------------------------------------------------------------------------------------------------------------------
 
-Data::Data(string texte,string TVar[],int indiceVarY){
-    indVarY=indiceVarY;
+Data::Data(string texte,string TVar[], int indiceVarY){
+    indVarY = indiceVarY;
     //Ouverture du fichier
     ifstream in(texte);
-    if (!in) cout << "pb ouverture fichier" << endl;
+    if (!in && texte!="") cout << "pb ouverture fichier" << endl;
 
     //Lecture des noms de variables (premiere ligne)
     string premiereLigne;
@@ -31,28 +30,28 @@ Data::Data(string texte,string TVar[],int indiceVarY){
 
     nbrVar = NomVar.size();
 
-    //Initialisation des types de variables
-    for(int i=0; i<nbrVar; i++){
-        TypeVar.push_back(TVar[i]);
-    }
+ //Initialisation des types de variables
+ for(int i=0; i<nbrVar; i++){
+    TypeVar.push_back(TVar[i]);
+}
 
-    //Lecture des donnees individuelles
-    string ligne;
-    while (getline(in, ligne)){
-        stringstream donnees(ligne);
-        string cellule;
-        DataIndividu I;
-        for (int i = 0; i < nbrVar && getline(donnees,cellule, ','); ++i){
-                if(TVar[i]=="quanti"){
-                    float y = stof(cellule);
-                    I.ajouteAt(new AtQuant(y));
-                }
-                else{
-                    I.ajouteAt(new AtQual(cellule));
-                }
-        }
-        V.push_back(I);
+//Lecture des donnees individuelles
+string ligne;
+while (getline(in, ligne)){
+    stringstream donnees(ligne);
+    string cellule;
+    DataIndividu I;
+    for (int i = 0; i < nbrVar && getline(donnees,cellule, ','); ++i){
+            if(TVar[i]=="quanti"){
+                float y = stof(cellule);
+                I.ajouteAt(new AtQuant(y));
+            }
+            else{
+                I.ajouteAt(new AtQual(cellule));
+            }
     }
+    V.push_back(I);
+}
 
     //Construction des categories uniques pour les variables qualitatives
     for (int i=0;i < nbrVar;++i) {
@@ -67,8 +66,9 @@ Data::Data(string texte,string TVar[],int indiceVarY){
         in.close();
 }
 
+//------------------------------------------------------------------------------------------------------------------
 
-//Affichage de la bdd
+//Affichage des données
 ostream & operator<<(ostream & os,Data D)
     {
         for(auto & nonVar : D.NomVar){
@@ -85,3 +85,48 @@ ostream & operator<<(ostream & os,Data D)
         }
         return os;
     }
+
+    //------------------------------------------------------------------------------------------------------------------
+
+    // Affichage du type des variables
+    void Data :: getTypeVar(){
+        for ( int i = 0; i<nbrVar; i++){
+        cout <<  NomVar[i] <<" : "<< TypeVar[i] << endl;
+        }
+    }
+
+
+//------------------------------------------------------------------------------------------------------------------
+
+// Définir la méthode pour diviser les données
+pair<Data, Data> Data::Train_Test_Split(float pourcentageTrain)  {
+    int n = V.size();
+    int n_train = n * pourcentageTrain;
+
+    vector<DataIndividu> shuffled = V;
+    srand(time(0));
+    random_shuffle(shuffled.begin(), shuffled.end());
+
+    vector<DataIndividu> train_V(shuffled.begin(), shuffled.begin() + n_train);
+    vector<DataIndividu> test_V(shuffled.begin() + n_train, shuffled.end());
+
+    Data trainData("", TypeVar.data(), indVarY);
+    Data testData("", TypeVar.data(), indVarY);
+
+    trainData.V = train_V;
+    testData.V = test_V;
+
+    trainData.NomVar = NomVar;
+    trainData.TypeVar = TypeVar;
+    trainData.cat = cat;
+    trainData.nbrVar = nbrVar;
+    trainData.indVarY = indVarY;
+
+    testData.NomVar = NomVar;
+    testData.TypeVar = TypeVar;
+    testData.cat = cat;
+    testData.nbrVar = nbrVar;
+    testData.indVarY = indVarY;
+
+    return {trainData, testData};
+}
