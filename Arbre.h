@@ -50,7 +50,7 @@ public:
 class Arbre
 {
 private :
-    Noeud* racine;//Pointeur vers la racine de l'arbre
+    Noeud* racine; //Pointeur vers la racine de l'arbre
 
     // Methodes Creation d'un noeud
     void creerNoeud(Noeud *& P,Data& D);
@@ -78,7 +78,7 @@ public  :
     string predire(DataIndividu& individu);                             //Predir  un individu
     Arbre() : racine(nullptr) {}                                         //Constructeur
     void creer_Arbre(Data & D, vector<int> indice, string nomFichier);   //Construit l'arbre
-    pair<vector<string>, float>  evaluerTestSet(Data& test_set);          // prediction et calcule du
+    pair<vector<string>, float>  evaluerTestSet(Data& test_set);          // prediction et calcule du score
 };
 
 //--------------------------------------------------------------------------------------------------------------------
@@ -89,13 +89,14 @@ private:
     int nbrArbres;         // Nombre d'arbres dans le bagging
     string typeVarY;       // Type de la variable cible
     int indVarY;           // Indice de la variable cible
+    Data D;
+    vector<int> genererEchantillon();
 public:
-    BaggingArbre(int nbrA) : nbrArbres(nbrA) {}
+    BaggingArbre(int nbrA,Data& E) : nbrArbres(nbrA),D(E) {}
     ~BaggingArbre();//Destructeur
-    void entrainer(Data& D);
-    string predire(Data& D, DataIndividu& individu);
-    void executerBagging(Data& D, DataIndividu& individuTest);
-private:
-    vector<int> genererEchantillon(Data& D);
+    void entrainer();
+    string predire(DataIndividu& individu);
+    void executerBagging();
+    pair<vector<string>, float>  evaluerTestSet(Data& test_set);  
 };
 #endif // ARBRE_H_INCLUDED

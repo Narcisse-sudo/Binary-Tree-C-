@@ -460,7 +460,7 @@ BaggingArbre::~BaggingArbre(){
  * \param D Data&
  * \return vector<int>
  */
-vector<int> BaggingArbre::genererEchantillon(Data& D){
+vector<int> BaggingArbre::genererEchantillon(){
     vector<int> echantillon;
     static mt19937 gen(random_device{}()^time(nullptr));
     uniform_int_distribution<> dis(0, D.V.size()-1);
@@ -478,11 +478,11 @@ vector<int> BaggingArbre::genererEchantillon(Data& D){
  * \param D Data&
  * \return void
  */
-void BaggingArbre::entrainer(Data& D){
+void BaggingArbre::entrainer(){
     // Creer et entrainer nombreux  arbres
     for (int i = 0; i < nbrArbres; ++i){
         Arbre* arbre = new Arbre();
-        vector<int> echantillon = genererEchantillon(D);
+        vector<int> echantillon = genererEchantillon();
         arbre->creer_Arbre(D,echantillon,"ArbreNum"+to_string(i)+"Bagging");
         arbres.push_back(arbre);
     }
@@ -495,7 +495,7 @@ void BaggingArbre::entrainer(Data& D){
  * \param D Data&, individu DataIndividu&
  * \return string
  */
-string BaggingArbre::predire(Data& D,DataIndividu& individu){
+string BaggingArbre::predire(DataIndividu& individu){
     if (arbres.empty()) {
         throw runtime_error("Aucun arbre n'a été entrainé.");
     }
@@ -535,12 +535,11 @@ string BaggingArbre::predire(Data& D,DataIndividu& individu){
  * \param individuTest DataIndividu&
  * \return void
  */
-void BaggingArbre::executerBagging(Data& D, DataIndividu& individuTest){
-    entrainer(D);
-    string prediction = predire(D,individuTest);
-    cout << "Prediction pour l'individu de test : " << prediction << endl;
+void BaggingArbre::executerBagging(){
+    entrainer();
 }
-
+//string prediction = predire(individuTest);
+ //   cout << "Prediction pour l'individu de test : " << prediction << endl;
 //--------------------------------------------------------------------------------------------------------------------
 
 /**
@@ -550,6 +549,68 @@ void BaggingArbre::executerBagging(Data& D, DataIndividu& individuTest){
  */
  
 pair<vector<string>, float> Arbre::evaluerTestSet(Data& test_set) {
+    vector<string> predictions; // Stocke les prédictions
+    int indexY = test_set.indVarY; // L’indice de la variable cible
+    string typeY = test_set.TypeVar[indexY]; // Type de la variable cible : "quali" ou "quanti"
+
+    float performance = 0.0;
+
+    // Variables pour R² score
+    vector<float> y_true; // Valeurs réelles
+    vector<float> y_pred; // Valeurs prédites
+    float somme = 0.0;
+
+    for (DataIndividu& individu : test_set.V) {
+        // Prédiction avec l’arbre de décision
+        string prediction = this->predire(individu);
+        predictions.push_back(prediction);
+
+        if (typeY == "quali") {
+            // Accuracy : compare la prédiction avec la vraie valeur
+            string true_val = individu.getAtQual(indexY);
+            if (prediction == true_val) {
+                performance += 1.0;
+            }
+        } else if (typeY == "quanti") {
+            //  calcule R² score 
+            float y = individu.getAtQuant(indexY);
+            float y_hat = stof(prediction); // Convertit la prédiction en float
+
+            y_true.push_back(y);
+            y_pred.push_back(y_hat);
+            somme += y;
+        }
+    }
+
+    if (typeY == "quali") {
+        // Accuracy = nombre de prédictions correctes / total
+        performance /= test_set.V.size();
+    } else if (typeY == "quanti") {
+        float y_bar = somme / y_true.size(); // Moyenne de y
+        float ss_tot = 0.0;
+        float ss_res = 0.0;
+
+        for (size_t i = 0; i < y_true.size(); ++i) {
+            ss_tot += pow(y_true[i] - y_bar, 2);
+            ss_res += pow(y_true[i] - y_pred[i], 2);
+        }
+
+        performance = 1 - (ss_res / ss_tot); // R²
+    }
+
+    return {predictions, performance};
+}
+
+
+//--------------------------------------------------------------------------------------------------------------------
+
+/**
+ * \brief Évalue le modèle sur un test_set, renvoie un vecteur de prédictions et la performance (accuracy ou R²)
+ * \param D test_set&
+ * \return pair
+ */
+ 
+ pair<vector<string>, float> BaggingArbre::evaluerTestSet(Data& test_set) {
     vector<string> predictions; // Stocke les prédictions
     int indexY = test_set.indVarY; // L’indice de la variable cible
     string typeY = test_set.TypeVar[indexY]; // Type de la variable cible : "quali" ou "quanti"

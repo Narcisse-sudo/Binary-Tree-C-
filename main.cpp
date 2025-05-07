@@ -34,6 +34,11 @@ int main()
     cout <<"\n \n" <<  " score : " << score << "\n\n"; 
 
     // Executer le bagging pour un seule individu
-     BaggingArbre bagging(5); // 5 arbres
-     bagging.executerBagging(data, data.V[3]);
+     BaggingArbre bagging(1,train_set); // 5 arbres
+     bagging.executerBagging();
+    // Prediction sur le test_set et calcule du score de prediction
+     auto [predictio, scor] = bagging.evaluerTestSet(test_set);
+     for (const auto& pred : predictio) cout << pred <<" ";
+     cout <<"\n \n" <<  " score : " << scor<< "\n\n"; 
+
 }
