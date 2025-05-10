@@ -1,10 +1,20 @@
 
 # 🌳 Projet : Arbres de décision et prédiction par *bagging* d’arbres en C++
 
-Ce projet implémente un **arbre de décision en C++** avec la méthode du **bagging** pour la classification.  
-L’arbre utilise des **critères de Gini** (variables qualitatives) ou de **variance** (variables quantitatives) pour construire les divisions optimales.
+Ce projet a pour objectif de concevoir et d’impl´ementer en C++ un modèle d’arbre binaire de
+décision capable de traiter des données quantitatives et qualitatives, tant en classification qu’en
+régression. L’approche repose sur la construction récursive de l’arbre en utilisant des crit`eres
+d’homog´en´eit´e tels que la variance pour les variables continues et l’indice de Gini pour les
+variables cat´egorielles.
+L’architecture du code repose sur des classes hi´erarchis´ees (Noeud, Arbre, Data, Attri-
+but, DataIndividu) assurant une modularit´e et une clart´e dans la construction des arbres.
+Le rapport d´etaille ´egalement l’ajout d’une fonctionnalit´e de visualisation automatique via la
+g´en´eration de fichiers .dot compatibles avec Graphviz, facilitant l’interpr´etation graphique
+des arbres g´en´er´es.
+Une extension du projet a ´et´e r´ealis´ee `a travers l’int´egration de l’algorithme Bagging (Boots-
+trap Aggregating), permettant d’am´eliorer la stabilit´e et la pr´ecision des pr´edictions par la
+combinaison de plusieurs arbres construits sur des ´echantillons bootstrap´es.
 
-Une fonctionnalité de **visualisation** est incluse via l’export `.dot` compatible avec **Graphviz**.
 
 ---
 
