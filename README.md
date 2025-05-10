@@ -96,3 +96,16 @@ combinaison de plusieurs arbres construits sur des échantillons bootstrapés.
 L’arbre est exporté en `.dot` :
 ```bash
 dot -Tpng arbre.dot -o arbre.png
+```
+---
+###
+<p><strong><span style="color:red">⚠️ AVERTISSEMENT IMPORTANT :</span></strong></p>
+
+<p><strong>✅ Ce projet suppose que les données sont préalablement nettoyées.</strong></p>
+
+<ul>
+  <li><strong>Aucune valeur manquante</strong> ne doit être présente dans le jeu de données.</li>
+  <li><strong>Aucune valeur aberrante</strong> ne doit subsister (outliers détectés et traités).</li>
+  <li>Les <strong>types de variables</strong> (qualitatives ou quantitatives) doivent être correctement identifiés.</li>
+</ul>
+
