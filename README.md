@@ -98,10 +98,10 @@ L’arbre est exporté en `.dot` :
 dot -Tpng arbre.dot -o arbre.png
 ```
 ---
-###
-<p><strong><span style="color:red">⚠️ AVERTISSEMENT IMPORTANT :</span></strong></p>
 
-<p><strong>✅ Ce projet suppose que les données sont préalablement nettoyées.</strong></p>
+# ⚠️ AVERTISSEMENT IMPORTANT :
+
+## ✅  Ce projet suppose que les données sont préalablement nettoyées
 
 <ul>
   <li><strong>Aucune valeur manquante</strong> ne doit être présente dans le jeu de données.</li>
