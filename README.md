@@ -86,7 +86,7 @@ combinaison de plusieurs arbres construits sur des échantillons bootstrapés.
 - Nombre minimum d’individus dans un nœud (ex : 10)
 - Pureté maximale du nœud
 
-### 🔮 Prédiction
+###  Prédiction
 - L’individu est classé en suivant les branches de l’arbre jusqu’à une feuille.
 
 ---
