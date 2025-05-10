@@ -6,11 +6,13 @@ décision capable de traiter des données quantitatives et qualitatives, tant en
 régression. L’approche repose sur la construction récursive de l’arbre en utilisant des critères
 d’homogénéité tels que la variance pour les variables continues et l’indice de Gini pour les
 variables catégorielles.
+
 L’architecture du code repose sur des classes hiérarchisées **(Noeud, Arbre, Data, Attri-
 but, DataIndividu)** assurant une modularité et une clarté dans la construction des arbres.
 Le rapport détaille également l’ajout d’une fonctionnalité de visualisation automatique via la
 génération de fichiers .dot compatibles avec Graphviz, facilitant l’interprètation graphique
 des arbres générés.
+
 Une extension du projet a été réalisée à travers l’intégration de l’algorithme **Bagging** (Boots-
 trap Aggregating), permettant d’améliorer la stabilité et la précision des prédictions par la
 combinaison de plusieurs arbres construits sur des échantillons bootstrapés.
