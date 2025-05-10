@@ -75,14 +75,14 @@ combinaison de plusieurs arbres construits sur des échantillons bootstrapés.
 
 ---
 
-## 🧠 Méthodes importantes
+## 🛑 Méthodes importantes
 
-### 🎯 Critères de division
+###  Critères de division
 - **Gini** : Utilisé pour les variables qualitatives.
 - **Variance** : Utilisée pour les variables quantitatives.
 - Le **gain** (d'information) permet de choisir la variable et la coupure optimale.
 
-### 🛑 Critères d'arrêt
+###  Critères d'arrêt
 - Nombre minimum d’individus dans un nœud (ex : 10)
 - Pureté maximale du nœud
 
