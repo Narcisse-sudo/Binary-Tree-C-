@@ -1,5 +1,5 @@
 
-# 🌳 Projet : Arbres de décision et prédiction par *bagging* d’arbres en C++
+#  Projet : Arbres de décision et prédiction par *bagging* d’arbres en C++
 
 Ce projet a pour objectif de concevoir et d’implémenter en C++ un modèle d’arbre binaire de
 décision capable de traiter des données quantitatives et qualitatives, tant en classification qu’en
@@ -20,9 +20,9 @@ combinaison de plusieurs arbres construits sur des échantillons bootstrapés.
 
 ---
 
-## 📂 Structure du Code
+##  Structure du Code
 
-### 🧩 Classes Principales
+###  Classes Principales
 
 #### 1. `Arbre`
 - **Rôle** : Crée et entraîne l'arbre de décision.
@@ -75,7 +75,7 @@ combinaison de plusieurs arbres construits sur des échantillons bootstrapés.
 
 ---
 
-## 🛑 Méthodes importantes
+##  Méthodes importantes
 
 ###  Critères de division
 - **Gini** : Utilisé pour les variables qualitatives.
@@ -91,7 +91,7 @@ combinaison de plusieurs arbres construits sur des échantillons bootstrapés.
 
 ---
 
-## 🖼️ Visualisation
+##  Visualisation
 
 L’arbre est exporté en `.dot` :
 ```bash
@@ -101,7 +101,7 @@ dot -Tpng arbre.dot -o arbre.png
 
 # ⚠️ AVERTISSEMENT IMPORTANT :
 
-## ✅  Ce projet suppose que les données sont préalablement nettoyées
+##   Ce projet suppose que les données sont préalablement nettoyées
 
 <ul>
   <li><strong>Aucune valeur manquante</strong> ne doit être présente dans le jeu de données.</li>
